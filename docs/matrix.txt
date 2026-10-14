@@ -1,0 +1,19 @@
+kvstore, 5 puts                          process  ordered  posix    simplest failure, weakest model that finds it
+snapshot  correct                        pass     pass     pass     
+snapshot  write-in-place                 FAIL     FAIL     FAIL     recovery failed: data file is corrupt (0 bytes, checksum do…
+snapshot  skip-file-fsync                pass     pass     FAIL     recovery failed: data file is corrupt (0 bytes, checksum do…
+snapshot  skip-dir-fsync                 pass     pass     FAIL     acknowledged k1=v1 is missing
+log       correct                        pass     pass     pass     
+log       ack-before-fsync               pass     pass     FAIL     acknowledged k1=v1 is missing
+log       skip-create-dir-fsync          pass     pass     FAIL     acknowledged k1=v1 is missing
+log       no-crc                         pass     FAIL     FAIL     "\x00\x00\x00\x00\x00"="" was never written
+
+SQLite 3.46.1, 6 transactions            process  ordered  posix    simplest failure, weakest model that finds it
+journal_mode=delete synchronous=off      pass     pass     FAIL     database does not open: Error: in prepare, database disk im…
+journal_mode=delete synchronous=normal   pass     pass     FAIL     integrity_check: Tree 3 page 3: btreeInitPage() returns err…
+journal_mode=delete synchronous=full     pass     pass     FAIL     acknowledged row k1 is missing
+journal_mode=delete synchronous=extra    pass     pass     pass     
+journal_mode=wal    synchronous=off      pass     pass     FAIL     acknowledged row k1 is missing
+journal_mode=wal    synchronous=normal   pass     pass     FAIL     acknowledged row k1 is missing
+journal_mode=wal    synchronous=full     pass     pass     pass     
+journal_mode=wal    synchronous=extra    pass     pass     pass     

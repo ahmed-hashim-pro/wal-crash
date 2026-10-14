@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: test (dev image)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make test
+
+  matrix:
+    name: matrix (README tables)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Fails if a verdict differs from the README's; then the output must
+      # match the committed docs/matrix.txt.
+      - run: make matrix
+      - run: git diff --exit-code docs/matrix.txt
+
+  host:
+    name: test (Ubuntu host, Go ${{ matrix.go }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ["1.23", "stable"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+      - run: sudo apt-get update && sudo apt-get install -y strace
+      - run: go vet ./... && go test -race ./...

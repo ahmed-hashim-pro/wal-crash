@@ -1,0 +1,23 @@
+   1  stdout   PUT k1 v1
+   2  create   data.tmp
+   3  write    data.tmp  19 B @ 0
+   4  fsync    data.tmp
+   5  rename   data.tmp -> data
+   6  fsync    ./  (directory)
+   7  stdout   ACK k1 v1
+   8  stdout   PUT k2 v2
+   9  create   data.tmp
+  10  write    data.tmp  25 B @ 0
+  11  fsync    data.tmp
+  12  rename   data.tmp -> data
+  13  fsync    ./  (directory)
+  14  stdout   ACK k2 v2
+  15  stdout   PUT k3 v3
+  16  create   data.tmp
+  17  write    data.tmp  31 B @ 0
+  18  fsync    data.tmp
+  19  rename   data.tmp -> data
+  20  fsync    ./  (directory)
+  21  stdout   ACK k3 v3
+final:
+  data 31 B

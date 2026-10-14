@@ -1,0 +1,56 @@
+   1  create   test.db
+   2  create   test.db-journal
+   3  write    test.db-journal  512 B @ 0
+   4  fsync    test.db-journal
+   5  fsync    ./  (directory)
+   6  write    test.db-journal  12 B @ 0
+   7  fsync    test.db-journal
+   8  write    test.db  4096 B @ 0
+   9  fsync    test.db
+  10  unlink   test.db-journal
+  11  create   test.db-wal
+  12  create   test.db-shm
+  13  truncate test.db-shm  to 3 B
+  14  write    test.db-shm  1 B @ 4095
+  15  write    test.db-shm  1 B @ 8191
+  16  write    test.db-shm  1 B @ 12287
+  17  write    test.db-shm  1 B @ 16383
+  18  write    test.db-shm  1 B @ 20479
+  19  write    test.db-shm  1 B @ 24575
+  20  write    test.db-shm  1 B @ 28671
+  21  write    test.db-shm  1 B @ 32767
+  22  write    test.db-wal  32 B @ 0
+  23  fsync    test.db-wal
+  24  fsync    ./  (directory)
+  25  write    test.db-wal  24 B @ 32
+  26  write    test.db-wal  4096 B @ 56
+  27  write    test.db-wal  24 B @ 4152
+  28  write    test.db-wal  4096 B @ 4176
+  29  write    test.db-wal  24 B @ 8272
+  30  write    test.db-wal  4096 B @ 8296
+  31  fsync    test.db-wal
+  32  stdout   PUT k1 v1-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+  33  write    test.db-wal  24 B @ 12392
+  34  write    test.db-wal  4096 B @ 12416
+  35  write    test.db-wal  24 B @ 16512
+  36  write    test.db-wal  4096 B @ 16536
+  37  fsync    test.db-wal
+  38  stdout   ACK k1 v1-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001
+  39  stdout   PUT k2 v2-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002
+  40  write    test.db-wal  24 B @ 20632
+  41  write    test.db-wal  4096 B @ 20656
+  42  write    test.db-wal  24 B @ 24752
+  43  write    test.db-wal  4096 B @ 24776
+  44  fsync    test.db-wal
+  45  stdout   ACK k2 v2-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002
+  46  fsync    test.db-wal
+  47  write    test.db  4096 B @ 0
+  48  write    test.db  4096 B @ 4096
+  49  write    test.db  4096 B @ 8192
+  50  truncate test.db  to 12288 B
+  51  fsync    test.db
+  52  unlink   test.db-shm
+  53  unlink   test.db-wal
+warning: strace line 110: test.db-shm is mapped shared and writable: writes through the mapping are not recorded, so crash states treat them as never reaching the disk
+final:
+  test.db 12288 B
