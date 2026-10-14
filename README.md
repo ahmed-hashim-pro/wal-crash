@@ -114,7 +114,7 @@ and wal-crash shows the mechanism behind each one:
   every `off` row passes `process` and fails `posix`.
 
 [`docs/matrix.txt`](docs/matrix.txt) is the raw output.
-`make matrix` reruns both tables (about a minute) and fails if any verdict
+`make matrix` reruns both tables (one to two minutes) and fails if any verdict
 changes. CI runs it on every push.
 
 ## Quickstart
